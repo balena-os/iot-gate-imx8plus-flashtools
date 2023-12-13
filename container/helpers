@@ -1,0 +1,30 @@
+#!/bin/bash
+
+function log {
+	case $1 in
+		ERROR)
+			loglevel=ERROR
+			shift
+			;;
+		WARN)
+			loglevel=WARNING
+			shift
+			;;
+		*)
+		loglevel=INFO
+			;;
+	esac
+	printf "%s%s\n" "[$loglevel] " "$1"
+	if [ "$loglevel" == "ERROR" ]; then
+		exit 1
+	fi
+}
+
+function help() {
+	if [ -z ${1+x} ]; then
+		echo "Provisioning can be started by typing:\n $ ./flash_iotg.sh -i /data/images/<balenaOS.img> -d [d1d8|d2d4]"
+	else
+		echo "Provisioning can be started by typing:\n $ ./run_container.sh -f -i /path/to/<balenaOS.img> -d [d1d8|d2d4]"
+	fi
+}
+
