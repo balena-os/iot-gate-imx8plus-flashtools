@@ -2,6 +2,7 @@ ARG RT=amd64-ubuntu:focal-run-20221210
 FROM balenalib/${RT}
 
 ENV DEBIAN_FRONTEND noninteractive
+
 WORKDIR /usr/src/app/
 
 # Install dependencies

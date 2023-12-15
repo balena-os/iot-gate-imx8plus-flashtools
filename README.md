@@ -80,6 +80,8 @@ Once the container image starts running, you can start provisioning using:
 root@5ea9a9133c3a:/usr/src/app# ./flash_iot.sh -d d1d8 -i /data/images/<balena-os.img>
 ```
 
+By default the container image is built to run on x86 hosts. If you would like to build and run the container image on an armv7 device, please use `./run_container.sh -a armv7 ...`.
+
 ### Support
 
 If you are having problems using these scripts, please [raise an issue](https://github.com/balena-os/iot-gate-imx8plus-flashtools/issues) on GitHub and the balena.io team will be happy to help.
