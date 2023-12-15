@@ -1,0 +1,22 @@
+- commits:
+    - subject: "README: Add arch option details to documentation"
+      hash: 7e715b87d1e19856729c09d09f469292eb54d66c
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+    - subject: "iot-gate-imx8plus: add initial revision of flashing tools"
+      hash: b7e9d6e86f0612b407d5cd458be0a444234ad2d2
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+  version: 0.0.2
+  title: ""
+  date: 2023-12-15T10:46:48.328Z
