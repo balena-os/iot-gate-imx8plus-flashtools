@@ -18,6 +18,8 @@ a device connected to your HOST.
 
 A Linux-based host with Docker installed is required. The scripts in this directory have been tested on Ubuntu 22.04.
 
+TKinter install `sudo apt install python3-tk`
+
 ## How to use
 
 Please follow the steps below to enter Recovery mode and perform provisioning of your Compulab IOT-GATE-iMX8PLUS with balenaOS
