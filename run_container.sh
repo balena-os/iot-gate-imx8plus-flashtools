@@ -61,6 +61,8 @@ fi
 
 if [[ ${arch} = "armv7" ]]; then
 	imageTag="--build-arg RT=armv7hf-ubuntu:focal-run-20221215"
+elif [ ${arch} = "aarch64" ] || [ ${arch} = "armv8" ]; then
+	imageTag="--build-arg RT=aarch64-ubuntu:focal-build-20240105"
 fi
 
 # Build Dockerfile, if image does not exist already
