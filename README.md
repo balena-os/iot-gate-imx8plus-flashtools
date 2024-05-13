@@ -81,6 +81,7 @@ root@5ea9a9133c3a:/usr/src/app# ./flash_iot.sh -d d1d8 -i /data/images/<balena-o
 ```
 
 By default the container image is built to run on x86 hosts. If you would like to build and run the container image on an armv7 device, please use `./run_container.sh -a armv7 ...`.
+The same, aarch64 devices can build and run the container by running `./run_container.sh -a aarch64 ...`. The `aarch64` configuration is reported to work from Ubuntu in Parallels on Apple M3 Sillicon.
 
 ### Support
 

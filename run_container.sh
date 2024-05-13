@@ -60,7 +60,11 @@ fi
 
 
 if [[ ${arch} = "armv7" ]]; then
+	log "Will build flash container for armv7..."
 	imageTag="--build-arg RT=armv7hf-ubuntu:focal-run-20221215"
+elif [[ ${arch} = "aarch64" ]]; then
+	log "Will build flash container for aarch64..."
+	imageTag="--build-arg RT=aarch64-ubuntu:focal-run-20221215"
 fi
 
 # Build Dockerfile, if image does not exist already
