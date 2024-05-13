@@ -1,4 +1,17 @@
 - commits:
+    - subject: "iot-gate-imx8plus: Add aarch64 build option for container"
+      hash: c8ea4d28a2af518e4efe8591eb391abe3349919d
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+  version: 0.0.3
+  title: ""
+  date: 2024-05-13T14:09:07.487Z
+- commits:
     - subject: "README: Add arch option details to documentation"
       hash: 7e715b87d1e19856729c09d09f469292eb54d66c
       body: ""
