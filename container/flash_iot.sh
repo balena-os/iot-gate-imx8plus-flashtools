@@ -41,7 +41,6 @@ cleanup () {
 	exit_code=$?
 	umount $balena_image_boot_mnt > /dev/null 2>&1 || true
 	losetup -d $balena_image_loop_dev > /dev/null 2>&1 || true
-	losetup -D
 	rm -rf $balena_image_boot_mnt
 	if [[ $exit_code -eq 0 ]]; then
 		log "Cleanup complete"
