@@ -2,7 +2,8 @@
 
 set -e
 
-. ./helpers
+WORK_PATH=$(dirname $(readlink -e ${BASH_SOURCE[0]}))
+. ${WORK_PATH}/helpers
 
 balena_image_boot_mnt="/tmp/resin-boot"
 balena_image_loop_dev=""
