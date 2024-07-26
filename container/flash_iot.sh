@@ -8,7 +8,6 @@ WORK_PATH=$(dirname $(readlink -e ${BASH_SOURCE[0]}))
 balena_image_boot_mnt="/tmp/resin-boot"
 balena_image_loop_dev=""
 work_dir="/usr/src/app/"
-dram_str="-d1d8"
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -17,13 +16,6 @@ while [[ $# -gt 0 ]]; do
 		-h|--help)
 			help
 			exit 0
-			;;
-		-d|--dram-conf)
-			if [ -z "$2" ]; then
-				log ERROR "\"$1\" argument needs a value."
-			fi
-			dram_conf=$2
-			shift
 			;;
 		-i|--balena-image)
 			if [ -z "$2" ]; then
@@ -40,15 +32,6 @@ while [[ $# -gt 0 ]]; do
 	esac
 	shift
 done
-
-if [[ $dram_conf = "d2d4" ]]; then
-	dram_str=""
-	log "Using bootloader compatible with 2GB and 4GB DRAM versions of IOT-GATE-iMX8PLUS"
-elif [[ $dram_conf = "d1d8" ]]; then
-	log "Using bootloader compatible with 1GB and 8GB DRAM versions of IOT-GATE-iMX8PLUS"
-else
-	log ERROR "Unknown or unspecified DRAM VERSION!"
-fi
 
 if [ ! -e $balena_image ]; then
 	log ERROR "balenaOS image could not be opened!"
@@ -68,8 +51,6 @@ cleanup () {
 
 trap cleanup EXIT SIGHUP SIGINT SIGTERM
 
-imx_boot_bin="imx-boot-iot-gate-imx8plus${dram_str}-sd.bin-flash_evk"
-
 # Extract balenaOS imx-boot
 
 if [ -d ${balena_image} ]; then
@@ -82,18 +63,15 @@ mount "${balena_image_loop_dev}p1" "$balena_image_boot_mnt"
 os_major_version=$(cat "${balena_image_boot_mnt}/os-release" | grep -Po '^VERSION="\K[^."]*')
 log "OS release major version is $os_major_version"
 
-# Versions older than 5 had to enter fastboot manually
-# from u-boot cmdline.
-if [[ $os_major_version -le 4 ]]; then
-	cp "${work_dir}/imx-boot/${imx_boot_bin}" "${work_dir}/${imx_boot_bin}"
-	log "Using local imx-boot ${imx_boot_bin}"
+# Don't wrap it up by double quotes; readlink can't resolve it
+imx_boot_bin=$(readlink -e ${balena_image_boot_mnt}/imx-boot*)
+if [[ -z ${imx_boot_bin:-""} ]];then
+	log ERROR "Failed to extract device bootloader"
 else
-	cp "${balena_image_boot_mnt}/${imx_boot_bin}" "${work_dir}/${imx_boot_bin}"
-	if [[ $? == 0 ]]; then
-		log "${imx_boot_bin} has been extracted"
-	else
-		log ERROR "Failed to extract ${imx_boot_bin}"
-	fi
+	mkdir -p ${work_dir} || true
+	cp "${imx_boot_bin}" "${work_dir}/"
+	imx_boot_bin=$(basename ${imx_boot_bin})
+	log "${imx_boot_bin} has been extracted"
 fi
 
 
