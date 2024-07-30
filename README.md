@@ -24,7 +24,7 @@ A Linux-based host with Docker installed is required. The scripts in this direct
 
 ## How to use
 
-Please follow the steps below to enter Recovery mode and perform provisioning of your Compulab IOT devicde with balenaOS
+Please follow the steps below to enter Recovery mode and perform provisioning of your Compulab IOT device with balenaOS
 
 ### Recovery mode
 
