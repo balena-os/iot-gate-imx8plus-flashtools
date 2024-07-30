@@ -21,13 +21,6 @@ while [[ $# -gt 0 ]]; do
 			help run_container
 			exit 0
 			;;
-		-d|--dram-conf)
-			if [ -z "$2" ]; then
-				log ERROR "\"$1\" argument needs a value."
-			fi
-			dram_conf=$2
-			shift
-			;;
 		-i|--balena-image)
 			if [ -z "$2" ]; then
 				log ERROR "\"$1\" argument needs a value."
@@ -51,10 +44,10 @@ while [[ $# -gt 0 ]]; do
 	shift
 done
 
-# if both -d and -i args are passed, run the flasher script in container directly
-if [ ! -z ${dram_conf+x} ] && [ ! -z ${balena_image+x} ]; then
+# if -i arg is passed, run the flasher script in container directly
+if [ ! -z ${balena_image+x} ]; then
 	imageName=`basename ${balena_image}`
-	cmd="docker container run --rm -it --privileged -v /dev/:/dev/ -v ${balena_image}:/usr/src/app/${imageName} uuu-image /bin/bash ./flash_iot.sh -d ${dram_conf} -i /usr/src/app/${imageName}"
+	cmd="docker container run --rm -it --privileged -v /dev/:/dev/ -v ${balena_image}:/usr/src/app/${imageName} uuu-image /bin/bash ./flash_iot.sh -i /usr/src/app/${imageName}"
 	log "Provisioning process will start now."
 fi
 
