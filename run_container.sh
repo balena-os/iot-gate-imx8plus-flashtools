@@ -45,7 +45,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 # if -i arg is passed, run the flasher script in container directly
-if [ [ ! -z ${balena_image+x} ]; then
+if [ ! -z ${balena_image+x} ]; then
 	imageName=`basename ${balena_image}`
 	cmd="docker container run --rm -it --privileged -v /dev/:/dev/ -v ${balena_image}:/usr/src/app/${imageName} uuu-image /bin/bash ./flash_iot.sh -i /usr/src/app/${imageName}"
 	log "Provisioning process will start now."
