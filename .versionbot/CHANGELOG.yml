@@ -1,4 +1,17 @@
 - commits:
+    - subject: "run_container: Fix typo"
+      hash: 414525e0cda52d8be3a358f38669403d93b57282
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+  version: 0.0.4
+  title: ""
+  date: 2024-07-30T07:42:51.969Z
+- commits:
     - subject: "iot-gate-imx8plus: Add aarch64 build option for container"
       hash: c8ea4d28a2af518e4efe8591eb391abe3349919d
       body: ""
