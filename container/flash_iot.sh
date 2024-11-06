@@ -59,9 +59,6 @@ balena_image_loop_dev="$(losetup -fP --show "${balena_image}")"
 mkdir -p $balena_image_boot_mnt > /dev/null 2>&1 || true
 mount "${balena_image_loop_dev}p1" "$balena_image_boot_mnt"
 
-os_major_version=$(cat "${balena_image_boot_mnt}/os-release" | grep -Po '^VERSION="\K[^."]*')
-log "OS release major version is $os_major_version"
-
 # Don't wrap it up by double quotes; readlink can't resolve it
 imx_boot_bin=$(readlink -e ${balena_image_boot_mnt}/imx-boot*)
 if [[ -z ${imx_boot_bin:-""} ]];then
