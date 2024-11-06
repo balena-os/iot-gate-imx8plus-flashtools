@@ -1,4 +1,21 @@
 - commits:
+    - subject: Allow to use with flasher images
+      hash: a1f88c862acd200739aad8f9d351ae574fec8798
+      body: >
+        By removing the logging message that prints the OS version from
+        `/mnt/boot/os-release` the script
+
+        works also to program flaher images.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+  version: 0.0.5
+  title: ""
+  date: 2024-11-06T16:09:25.400Z
+- commits:
     - subject: "run_container: Fix typo"
       hash: 414525e0cda52d8be3a358f38669403d93b57282
       body: ""
