@@ -51,17 +51,19 @@ if [ ! -z ${balena_image+x} ]; then
 	log "Provisioning process will start now."
 fi
 
-
+platform="linux/amd64"
 if [[ ${arch} = "armv7" ]]; then
 	log "Will build flash container for armv7..."
+	platform="linux/arm/v7"
 	imageTag="--build-arg RT=armv7hf-ubuntu:focal-run-20221215"
 elif [[ ${arch} = "aarch64" ]]; then
 	log "Will build flash container for aarch64..."
+	platform="linux/arm64/v8"
 	imageTag="--build-arg RT=aarch64-ubuntu:focal-run-20221215"
 fi
 
 # Build Dockerfile, if image does not exist already
-docker build -t uuu-image . ${imageTag}
+docker build --platform ${platform} -t uuu-image . ${imageTag}
 
 eval $cmd
 
