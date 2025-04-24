@@ -1,4 +1,19 @@
 - commits:
+    - subject: "Dockerfile: update mfgtools to latest"
+      hash: 37194f17c7d15e7c8094d4e00fed583f481f626b
+      body: |
+        This is 10 commits above the latest upstream tag uuu_1.5.201.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 0.1.0
+  title: ""
+  date: 2025-04-24T14:09:47.493Z
+- commits:
     - subject: Allow to use with flasher images
       hash: a1f88c862acd200739aad8f9d351ae574fec8798
       body: >
