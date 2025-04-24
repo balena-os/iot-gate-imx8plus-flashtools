@@ -1,4 +1,19 @@
 - commits:
+    - subject: "Dockerfile: add tinyxml dependency"
+      hash: 82426e11edd87bc9b3f66d4d37b2d49be3aae593
+      body: |
+        This is required on the latest version.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 0.1.1
+  title: ""
+  date: 2025-04-24T14:47:17.000Z
+- commits:
     - subject: "Dockerfile: update mfgtools to latest"
       hash: 37194f17c7d15e7c8094d4e00fed583f481f626b
       body: |
