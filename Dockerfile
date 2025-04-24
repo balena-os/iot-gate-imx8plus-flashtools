@@ -8,7 +8,7 @@ WORKDIR /usr/src/app/
 # Install dependencies
 RUN \
     apt-get update && apt-get install -y libusb-1.0-0-dev libbz2-dev libzstd-dev pkg-config cmake libssl-dev g++ zlib1g-dev git usbutils file && \
-    git clone https://github.com/nxp-imx/mfgtools.git && cd mfgtools && git checkout 3a5beb69a3b0e8dcb78bd6a8fabd77f2ebe6018f && \
+    git clone https://github.com/nxp-imx/mfgtools.git && cd mfgtools && git checkout 311ee9b3cca0275fbb5eb5228c56edbb518afd67 && \
     cmake -S . -B build  && \
     cmake --build build --target all
 
