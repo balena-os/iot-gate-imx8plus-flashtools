@@ -283,7 +283,11 @@ install_dependencies() {
 ###############################################################################
 
 detect_device() {
-    if system_profiler SPUSBDataType 2>/dev/null | grep -qi "${NXP_USB_VID#0x}"; then
+    # macOS 26 (Tahoe) renamed the USB profiler datatype to SPUSBHostDataType;
+    # earlier macOS versions use SPUSBDataType. Query both for compatibility —
+    # system_profiler silently ignores an unknown datatype (exit 0, no output).
+    if system_profiler SPUSBHostDataType SPUSBDataType 2>/dev/null \
+        | grep -qi "${NXP_USB_VID#0x}"; then
         return 0
     fi
     return 1
