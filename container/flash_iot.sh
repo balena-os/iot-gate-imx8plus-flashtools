@@ -1,10 +1,7 @@
 #!/bin/bash
-
 set -e
-
 WORK_PATH=$(dirname $(readlink -e ${BASH_SOURCE[0]}))
 . ${WORK_PATH}/helpers
-
 balena_image_boot_mnt="/tmp/resin-boot"
 balena_image_loop_dev=""
 work_dir="/usr/src/app/"
@@ -47,21 +44,19 @@ cleanup () {
 	fi
 	rm -rf $balena_image_boot_mnt || true
 }
-
 trap cleanup EXIT SIGHUP SIGINT SIGTERM
 
 # Extract balenaOS imx-boot
-
 if [ -d ${balena_image} ]; then
 	log ERROR "Provided path ${balena_image} is a directory or an inexistent file path. This can happen when passing an incorrect path do the flashing script inside docker."
 fi
+
 balena_image_loop_dev="$(losetup -fP --show "${balena_image}")"
 mkdir -p $balena_image_boot_mnt > /dev/null 2>&1 || true
 mount "${balena_image_loop_dev}p1" "$balena_image_boot_mnt"
 
-# Don't wrap it up by double quotes; readlink can't resolve it
 imx_boot_bin=$(readlink -e ${balena_image_boot_mnt}/imx-boot*)
-if [[ -z ${imx_boot_bin:-""} ]];then
+if [[ -z ${imx_boot_bin:-""} ]]; then
 	log ERROR "Failed to extract device bootloader"
 else
 	mkdir -p ${work_dir} || true
@@ -70,25 +65,37 @@ else
 	log "${imx_boot_bin} has been extracted"
 fi
 
+# -d keeps uuu alive as a daemon so it survives the SPL
+# reset during DRAM training/re-enumeration.
 
-# We can't rely on u-boot being flashed on the device already,
-# so let's load it prior to flashing it and the balenaOS image
-${work_dir}/mfgtools/build/uuu/uuu "${work_dir}/${imx_boot_bin}"
+log "Flashing device: loading ${imx_boot_bin} and writing balenaOS image ..."
+uuu_log="$(mktemp)"
+${work_dir}/mfgtools/build/uuu/uuu -v -d -b emmc_all "${work_dir}/${imx_boot_bin}" "${balena_image}" > >(tee "${uuu_log}") 2>&1 &
+uuu_pid=$!
 
-if [[ $? == 0 ]]; then
-	log "${imx_boot_bin} has been loaded... Waiting for a couple seconds to allow fastboot to run..."
-else
-	log ERROR "Failed to load ${imx_boot_bin}"
+while kill -0 ${uuu_pid} 2>/dev/null; do
+	if grep -A1 "Start Cmd:FB: done" "${uuu_log}" | grep -q "Okay"; then
+		sleep 1  # let final log lines flush
+		kill -9 ${uuu_pid} 2>/dev/null || true
+		break
+	fi
+	sleep 1
+done
+wait ${uuu_pid} 2>/dev/null || true
+
+# uuu's daemon process can also exit on its own (e.g. device disconnected,
+# transfer failed) without ever reaching "FB: done". Confirm the actual
+# success marker is present in the captured log.
+
+flash_ok=0
+if grep -A1 "Start Cmd:FB: done" "${uuu_log}" | grep -q "Okay"; then
+	flash_ok=1
+fi
+rm -f "${uuu_log}"
+
+if [[ ${flash_ok} -ne 1 ]]; then
+	log ERROR "Failed to flash device - 'FB: done / Okay' was never reached"
 fi
 
-# 5 seconds are sufficient for u-boot to enter fastboot mode
-sleep 5
-
-${work_dir}/mfgtools/build/uuu/uuu -v -b emmc_all "${work_dir}/${imx_boot_bin}" "${balena_image}"
-
-if [[ $? == 0 ]]; then
-	log "Finished writing balenaOS image!"
-	log "Please remove programming cable from the PC, power off the board and then power it back on."
-else
-	log ERROR "Failed to write balenaOS"
-fi
+log "Finished writing balenaOS image!"
+log "Please remove programming cable from the PC, power off the board and then power it back on."
