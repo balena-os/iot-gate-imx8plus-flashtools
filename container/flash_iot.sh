@@ -8,6 +8,8 @@ WORK_PATH=$(dirname $(readlink -e ${BASH_SOURCE[0]}))
 balena_image_boot_mnt="/tmp/resin-boot"
 balena_image_loop_dev=""
 work_dir="/usr/src/app/"
+sdp_device="0x1FC9:0x0146"
+fbd_device="0x1FC9:0x0152"
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -36,6 +38,20 @@ done
 if [ ! -e $balena_image ]; then
 	log ERROR "balenaOS image could not be opened!"
 fi
+
+sdp_wait() {
+	log "Make sure that the device is connected and recognized as an SDP-device ${sdp_device} ..."
+	sdp_wait() {
+		echo -n "."
+	}
+}
+
+fbd_wait() {
+	log "${imx_boot_bin} has been loaded... Waiting for a couple seconds to allow fastboot to run..."
+	fbd_wait() {
+		echo -n "."
+	}
+}
 
 cleanup () {
 	exit_code=$?
@@ -70,10 +86,26 @@ else
 	log "${imx_boot_bin} has been extracted"
 fi
 
+# make sure that the connected device is in SDP mode
+while [ 1 ];do
+	lsusb -d ${sdp_device} &>/dev/null && break || true
+	sdp_wait ; sleep 0.5;
+done
 
 # We can't rely on u-boot being flashed on the device already,
 # so let's load it prior to flashing it and the balenaOS image
-${work_dir}/mfgtools/build/uuu/uuu "${work_dir}/${imx_boot_bin}"
+# The uuu must have "-d" option to be able to continue pushing
+# the imx-boot binary after SPL reset;
+# SPL issues the board reset at DRAM training/probbing
+# at the very first boot.
+${work_dir}/mfgtools/build/uuu/uuu -v -d "${work_dir}/${imx_boot_bin}" &
+uuu_pid=$!
+while [ 1 ];do
+	lsusb -d ${fbd_device} &>/dev/null && break || true
+	fbd_wait ; sleep 0.5;
+done
+kill -9 ${uuu_pid} || true
+
 
 if [[ $? == 0 ]]; then
 	log "${imx_boot_bin} has been loaded... Waiting for a couple seconds to allow fastboot to run..."
