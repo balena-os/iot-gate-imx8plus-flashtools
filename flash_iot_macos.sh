@@ -112,29 +112,41 @@ check_homebrew() {
     log_info "Homebrew found (${BREW_PREFIX})."
 }
 
-check_libusb() {
+# Brew formulae the pre-built uuu binary links against at runtime.
+# (Verify with: otool -L ./uuu)
+readonly UUU_RUNTIME_DEPS=(libusb tinyxml2 openssl@3)
+
+check_runtime_libs() {
     # Use filesystem check — `brew list` refuses to run as root
-    local brew_prefix="${BREW_PREFIX}"
-    if [[ -d "${brew_prefix}/Cellar/libusb" ]] || [[ -f "${brew_prefix}/lib/libusb-1.0.dylib" ]]; then
-        log_info "libusb found."
+    local missing=()
+    local dep
+    for dep in "${UUU_RUNTIME_DEPS[@]}"; do
+        if [[ -d "${BREW_PREFIX}/opt/${dep}/lib" ]] || [[ -d "${BREW_PREFIX}/Cellar/${dep}" ]]; then
+            continue
+        fi
+        missing+=("${dep}")
+    done
+
+    if [[ ${#missing[@]} -eq 0 ]]; then
+        log_info "Runtime libraries found (${UUU_RUNTIME_DEPS[*]})."
         return 0
     fi
 
     # Cannot install via Homebrew as root
     if [[ "${EUID}" -eq 0 ]]; then
-        log_error "libusb is not installed. Homebrew cannot install packages as root.\nRun first: ./flash_iot_macos.sh --install-deps"
+        log_error "Missing runtime libraries: ${missing[*]}. Homebrew cannot install packages as root.\nRun first: ./flash_iot_macos.sh --install-deps"
     fi
 
-    log_warn "libusb is not installed."
-    read -rp "Install libusb via Homebrew? [Y/n] " answer
+    log_warn "Missing runtime libraries: ${missing[*]}"
+    read -rp "Install via Homebrew? [Y/n] " answer
     case "${answer}" in
         [nN]*)
-            log_error "libusb is required for USB communication with the device."
+            log_error "These libraries are required for uuu to communicate with the device."
             ;;
         *)
-            log_info "Installing libusb..."
-            brew install libusb
-            log_info "libusb installed successfully."
+            log_info "Installing: ${missing[*]}"
+            brew install "${missing[@]}"
+            log_info "Runtime libraries installed successfully."
             ;;
     esac
 }
@@ -261,7 +273,7 @@ check_uuu() {
 
 install_dependencies() {
     check_homebrew
-    check_libusb
+    check_runtime_libs
     check_uuu
     log_info "All dependencies are satisfied."
 }
@@ -271,7 +283,11 @@ install_dependencies() {
 ###############################################################################
 
 detect_device() {
-    if system_profiler SPUSBDataType 2>/dev/null | grep -qi "${NXP_USB_VID#0x}"; then
+    # macOS 26 (Tahoe) renamed the USB profiler datatype to SPUSBHostDataType;
+    # earlier macOS versions use SPUSBDataType. Query both for compatibility —
+    # system_profiler silently ignores an unknown datatype (exit 0, no output).
+    if system_profiler SPUSBHostDataType SPUSBDataType 2>/dev/null \
+        | grep -qi "${NXP_USB_VID#0x}"; then
         return 0
     fi
     return 1
