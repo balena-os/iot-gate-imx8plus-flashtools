@@ -1,4 +1,21 @@
 - commits:
+    - subject: "flash_iot: Bring in re-worked flashing logic"
+      hash: efcdabb43e514f475f2cc3ae00a92901ec85d330
+      body: |
+        This change was authored and submitted by github user TimoAtMUV
+        in https://github.com/balena-os/balena-iotdin-imx8p/issues/247#issuecomment-4891397093
+        and it fixes flashing newer iotdin hardware revisions.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Valentin Raevsky
+      nested: []
+  version: 0.2.1
+  title: ""
+  date: 2026-07-20T15:11:56.821Z
+- commits:
     - subject: "flash_iot_macos: address PR review feedback"
       hash: b38b7830e81a6dbcc1cd8d8ad2c0605d9451f7ab
       body: |
