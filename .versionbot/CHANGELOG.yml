@@ -1,4 +1,19 @@
 - commits:
+    - subject: Extend balena-io/renovate-config
+      hash: 803e4ce142c67b7c66d4573e21c9c3fd0968710c
+      body: |
+        Non-yocto repos use the balena-io preset for Change-type footers.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 0.2.2
+  title: ""
+  date: 2026-09-25T14:29:00.240Z
+- commits:
     - subject: "flash_iot: Bring in re-worked flashing logic"
       hash: efcdabb43e514f475f2cc3ae00a92901ec85d330
       body: |
