@@ -1,4 +1,4 @@
-ARG RT=amd64-ubuntu:focal-run-20221210
+ARG RT=amd64-ubuntu:focal-run-20221210@sha256:54d37b897815679024c5493231a82a52d8050709b74caef2b3b598dac20ce43c
 FROM balenalib/${RT}
 
 ENV DEBIAN_FRONTEND noninteractive
