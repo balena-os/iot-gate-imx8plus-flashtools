@@ -1,4 +1,56 @@
 - commits:
+    - subject: "gitignore: ignore locally-installed uuu binary"
+      hash: 5f7e3ee54589641640eaca43de02ddc377edcb90
+      body: |
+        flash_iot_macos.sh downloads or builds the uuu binary into the repo
+        root (SCRIPT_DIR) so it persists across runs. It is a ~1.8 MB
+        machine-specific artifact and must not be committed.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Arne Van Acker <arne@bright-energy.eu>
+        signed-off-by: Arne Van Acker <arne@bright-energy.eu>
+      author: Arne Van Acker
+      nested: []
+    - subject: "flash_iot_macos: support macOS 26 Tahoe USB profiler datatype"
+      hash: 06e18289db3c1662e8629f80a5b23b0c8951c7b4
+      body: |
+        macOS 26 (Tahoe) renamed the system_profiler USB datatype from
+        SPUSBDataType to SPUSBHostDataType. On Tahoe the old name returns
+        nothing, so detect_device never saw the i.MX8M Plus and the script
+        reported no device in download mode.
+
+        Query both datatypes; system_profiler silently ignores an unknown one
+        (exit 0, no output), so this stays compatible with older macOS.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Arne Van Acker <arne@bright-energy.eu>
+        signed-off-by: Arne Van Acker <arne@bright-energy.eu>
+      author: Arne Van Acker
+      nested: []
+    - subject: "flash_iot_macos: install all uuu runtime libs, not just libusb"
+      hash: 6753ed3af1bbc55ed8db98a05d766657d9763470
+      body: |
+        The pre-built uuu binary links against libusb, tinyxml2 and openssl@3
+        at runtime (verified with otool -L). check_libusb only ensured libusb
+        was present, so flashing failed at runtime on machines missing tinyxml2
+        or openssl@3 with a dynamic loader error instead of a clear message.
+
+        Replace check_libusb with check_runtime_libs, which iterates over a
+        UUU_RUNTIME_DEPS list, reports every missing formula and installs them
+        in a single brew invocation.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Arne Van Acker <arne@bright-energy.eu>
+        signed-off-by: Arne Van Acker <arne@bright-energy.eu>
+      author: Arne Van Acker
+      nested: []
+  version: 0.2.5
+  title: ""
+  date: 2026-09-25T18:04:50.611Z
+- commits:
     - subject: Update flowzonify to v0.4.12
       hash: 453a729102bfd564b7fdeacbb852e6fb2b5fbcdd
       body: |
