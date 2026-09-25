@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update Pin balenalib/amd64-ubuntu Docker tag to 54d37b8
+      hash: a5b61de389ac3792fb27909202ed695176fa4ef9
+      body: |
+        Update balenalib/amd64-ubuntu
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 0.2.3
+  title: ""
+  date: 2026-09-25T15:03:18.685Z
+- commits:
     - subject: Extend balena-io/renovate-config
       hash: 803e4ce142c67b7c66d4573e21c9c3fd0968710c
       body: |
